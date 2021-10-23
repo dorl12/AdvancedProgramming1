@@ -21,7 +21,7 @@ float var(float* x, int size){
     float sqDiff = 0;
     float mean = avg(x, size);
     for (int i = 0; i < size; i++) {
-        sqDiff += (x* - mean) * (x* - mean);
+        sqDiff += (*x - mean) * (*x - mean);
     }
     return sqDiff / n;
 }
