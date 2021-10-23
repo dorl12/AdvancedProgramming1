@@ -55,7 +55,6 @@ Line linear_reg(Point** points, int size){
         sumPowX += (*points[i]->x) * (*points[i]->x);
         sumXY += (*points[i]->x) * (*points[i]->y);
     }
-
     a = (arrSize*sumXY - sumX*sumY) / (arrSize*sumPowX - sumX*sumX);
     b = (sumY - a*sumX) / arrSize;
 
