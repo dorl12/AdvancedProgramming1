@@ -14,6 +14,8 @@ float avg(float* x, int size){
     }
     sum = sum / (float)size;
 	return sum;
+
+	return 0;
 }
 
 // returns the variance of X and Y
