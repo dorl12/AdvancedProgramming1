@@ -1,14 +1,18 @@
-
 /*
  * anomaly_detection_util.cpp
  *
- * Author: write your ID and name here
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
  */
-
+#include <stdexcept>
 #include <math.h>
 #include "anomaly_detection_util.h"
 
+
 float avg(float* x, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     float sum = 0;
     float average;
     for(int i = 0; i < size;i++){
@@ -20,6 +24,9 @@ float avg(float* x, int size){
 
 // returns the variance of X and Y
 float var(float* x, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     float sqDiff = 0;
     float mean = avg(x, size);
     for (int i = 0; i < size; i++) {
@@ -30,6 +37,9 @@ float var(float* x, int size){
 
 // returns the covariance of X and Y
 float cov(float* x, float* y, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     float cov = 0;
     for (int i = 0; i < size; i++){
         cov += (x[i] - avg(x,size)) * (y[i] - avg(y,size));
@@ -41,12 +51,18 @@ float cov(float* x, float* y, int size){
 
 // returns the Pearson correlation coefficient of X and Y
 float pearson(float* x, float* y, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
 	float corr = cov(x, y, size) / ((sqrt(var(x, size))) * (sqrt(var(y, size))));
     return corr;
 }
 
 // performs a linear regression and returns the line equation
 Line linear_reg(Point** points, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     int arrSize = sizeof(points) / sizeof(points[0]);
     float sumX = 0, sumY = 0, sumPowX = 0, sumXY = 0, a, b;
     for (int i = 0; i < arrSize; i++) {
@@ -63,17 +79,23 @@ Line linear_reg(Point** points, int size){
 
 // returns the deviation between point p and the line equation of the points
 float dev(Point p,Point** points, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     Line line;
     line = linear_reg(points, size);
     float linearVal = line.a * p.x + line.b;
-    float distance = abs(linearVal - p.y);
-
-	return distance;
+    if (linearVal >= p.y){
+        return linearVal - p.y;
+    }
+    return p.y - linearVal;
 }
 
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
     float linearVal = l.a * p.x + l.b;
-    float distance = abs(linearVal - p.y);
-    return distance;
+    if (linearVal >= p.y){
+        return linearVal - p.y;
+    }
+    return p.y - linearVal;
 }
