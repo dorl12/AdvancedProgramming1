@@ -1,59 +1,75 @@
-
 /*
  * anomaly_detection_util.cpp
  *
- * Author: write your ID and name here
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
  */
-
+#include <stdexcept>
 #include <math.h>
 #include "anomaly_detection_util.h"
 
+
 float avg(float* x, int size){
-    float sum = 0;
-    for(int i = 1; i <= size;i++){
-        sum += *x;
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
     }
-    sum = sum / (float)size;
-	return sum;
+    float sum = 0;
+    float average;
+    for(int i = 0; i < size;i++){
+        sum += x[i];
+    }
+    average = sum / (float)size;
+	return average;
 }
 
 // returns the variance of X and Y
 float var(float* x, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     float sqDiff = 0;
     float mean = avg(x, size);
     for (int i = 0; i < size; i++) {
-        sqDiff += (*x - mean) * (*x - mean);
+        sqDiff += (x[i] - mean) * (x[i] - mean);
     }
-    return sqDiff / n;
+    return sqDiff / (float)size;
 }
 
 // returns the covariance of X and Y
 float cov(float* x, float* y, int size){
-    float Ex = avg(x, size);
-    float Ey = avg(y, size);
-    float xy = (*x) * (*y);
-    float* xy_f = &xy;
-    float Exy = avg(xy_f, size);
-    float cov = Exy - (Ex*Ey);
-	return cov;
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
+    float cov = 0;
+    for (int i = 0; i < size; i++){
+        cov += (x[i] - avg(x,size)) * (y[i] - avg(y,size));
+    }
+
+	return cov / size;
 }
 
 
 // returns the Pearson correlation coefficient of X and Y
 float pearson(float* x, float* y, int size){
-	float corr = cov(x, y, size) / sqrt(avg(x, size)) * sqrt(avg(y, size));
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
+	float corr = cov(x, y, size) / ((sqrt(var(x, size))) * (sqrt(var(y, size))));
     return corr;
 }
 
 // performs a linear regression and returns the line equation
 Line linear_reg(Point** points, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     int arrSize = sizeof(points) / sizeof(points[0]);
     float sumX = 0, sumY = 0, sumPowX = 0, sumXY = 0, a, b;
     for (int i = 0; i < arrSize; i++) {
-        sumX += *points[i]->x;
-        sumY += *points[i]->y;
-        sumPowX += (*points[i]->x) * (*points[i]->x);
-        sumXY += (*points[i]->x) * (*points[i]->y);
+        sumX += points[i]->x;
+        sumY += points[i]->y;
+        sumPowX += (points[i]->x) * (points[i]->x);
+        sumXY += (points[i]->x) * (points[i]->y);
     }
     a = (arrSize*sumXY - sumX*sumY) / (arrSize*sumPowX - sumX*sumX);
     b = (sumY - a*sumX) / arrSize;
@@ -63,17 +79,23 @@ Line linear_reg(Point** points, int size){
 
 // returns the deviation between point p and the line equation of the points
 float dev(Point p,Point** points, int size){
+    if (size == 0){
+        throw std::runtime_error("Size Not Valid");
+    }
     Line line;
     line = linear_reg(points, size);
-    float linearVal = line.a * p.x + b;
-    float distance = abs(linearVal - p.y);
-
-	return distance;
+    float linearVal = line.a * p.x + line.b;
+    if (linearVal >= p.y){
+        return linearVal - p.y;
+    }
+    return p.y - linearVal;
 }
 
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
-    float linearVal = l.a * p.x + b;
-    float distance = abs(linearVal - p.y);
-    return distance;
+    float linearVal = l.a * p.x + l.b;
+    if (linearVal >= p.y){
+        return linearVal - p.y;
+    }
+    return p.y - linearVal;
 }
