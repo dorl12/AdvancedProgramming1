@@ -31,19 +31,18 @@ float var(float* x, int size){
 float cov(float* x, float* y, int size){
     float Ex = avg(x, size);
     float Ey = avg(y, size);
-    float xy = (*)x * (*)y;
+    float xy = (*x) * (*y);
     float* xy_f = &xy;
     float Exy = avg(xy_f, size);
-
     float cov = Exy - (Ex*Ey);
-
 	return cov;
 }
 
 
 // returns the Pearson correlation coefficient of X and Y
 float pearson(float* x, float* y, int size){
-	return 0;
+	float corr = cov(x, y, size) / sqrt(avg(x, size)) * sqrt(avg(y, size));
+    return corr;
 }
 
 // performs a linear regression and returns the line equation
