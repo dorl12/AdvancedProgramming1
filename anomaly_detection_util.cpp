@@ -1,3 +1,4 @@
+
 /*
  * animaly_detection_util.cpp
  *
@@ -28,8 +29,15 @@ float var(float* x, int size){
 
 // returns the covariance of X and Y
 float cov(float* x, float* y, int size){
+    float Ex = avg(x, size);
+    float Ey = avg(y, size);
+    float xy = (*)x * (*)y;
+    float* xy_f = &xy;
+    float Exy = avg(xy_f, size);
 
-	return 0;
+    float cov = Exy - (Ex*Ey);
+
+	return cov;
 }
 
 
@@ -53,7 +61,3 @@ float dev(Point p,Point** points, int size){
 float dev(Point p,Line l){
 	return 0;
 }
-
-
-
-
