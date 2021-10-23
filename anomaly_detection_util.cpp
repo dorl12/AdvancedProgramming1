@@ -8,6 +8,13 @@
 #include "anomaly_detection_util.h"
 
 float avg(float* x, int size){
+    float sum = 0;
+    for(int i = 1; i <= size;i++){
+        sum += *x;
+    }
+    sum = sum / (float)size;
+	return sum;
+
 	return 0;
 }
 
@@ -18,6 +25,7 @@ float var(float* x, int size){
 
 // returns the covariance of X and Y
 float cov(float* x, float* y, int size){
+
 	return 0;
 }
 
