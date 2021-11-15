@@ -18,9 +18,11 @@ public:
     int numOfFeatures()const;
     float* vecToArray(int index) const;
     string getFeature(int index) const;
+    vector<string> getFeaturesVec() const;
     Point** vecToPoints(int f1, int f2) const;
     int numOfRows() const;
     float maxDev(Point** points, Line line, int size) const;
+    int getIndexFeature(vector<string> v, string s) const;
 };
 
 #endif /* TIMESERIES_H_ */

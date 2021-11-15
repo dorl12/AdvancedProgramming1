@@ -29,7 +29,8 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
             featureCouple.feature2 = ts.getFeature(c);
             featureCouple.lin_reg = linear_reg(ts.vecToPoints(i, c), ts.numOfRows());
             featureCouple.corrlation = p;
-            featureCouple.threshold = ts.maxDev(ts.vecToPoints(i,c), featureCouple.lin_reg, ts.numOfRows());
+            featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(i,(int)c),
+                                                        featureCouple.lin_reg, ts.numOfRows()) * 1.1);
             this->cf.push_back(featureCouple);
             //delete arr of points
         }
@@ -38,6 +39,30 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
 }
 
 vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
+    vector<AnomalyReport> vAP;
+    vector<correlatedFeatures>::iterator iter;
+    float threshold, indicator, x, y;
+    int index_f1, index_f2;
+
+    for (iter = cf.begin(); iter < cf.end(); iter++) {
+        index_f1 = ts.getIndexFeature(ts.getFeaturesVec(), iter->feature1);
+        index_f2 = ts.getIndexFeature(ts.getFeaturesVec(), iter->feature2);
+        threshold = iter->threshold;
+        for (int i = 0; i < ts.numOfRows(); i ++) {
+            x = ts.getDataList()[index_f1][i];
+            y = ts.getDataList()[index_f2][i];
+            indicator = dev(Point(x,y), iter->lin_reg);
+            if (indicator > threshold) {
+                string s = iter->feature1;
+                s.append(" - ");
+                s.append(iter->feature2);
+                AnomalyReport* ap = new AnomalyReport(s, i);
+                vAP.push_back(*ap);
+            }
+        }
+    }
+    return vAP;
+
     // two loops
     // 1st loop run on corlated features
     // check for each row

@@ -1,5 +1,6 @@
 #include <sstream>
 #include "timeseries.h"
+using namespace std;
 
 TimeSeries::TimeSeries(const char* CSVfileName) {
     fstream file(CSVfileName);
@@ -51,6 +52,9 @@ float* TimeSeries::vecToArray(int index) const{
 string TimeSeries::getFeature(int index) const {
     return features[index];
 }
+vector<string> TimeSeries::getFeaturesVec() const {
+    return features;
+}
 Point** TimeSeries::vecToPoints(int f1, int f2) const {
     int size = dataList[f1].size();
     Point* arr[size];
@@ -77,4 +81,14 @@ float TimeSeries::maxDev(Point** arrP, Line line, int size) const {
     }
     return maximalDev;
 }
+int TimeSeries::getIndexFeature(vector<string> v, string s)const {
+    for (int i = 0; i < v.size(); i ++) {
+        if (v[i].compare(s) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
 //write a func that return max dev (get line, get points**, size)
