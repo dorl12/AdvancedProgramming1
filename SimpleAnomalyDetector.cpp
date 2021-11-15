@@ -1,3 +1,4 @@
+
 #include "anomaly_detection_util.h"
 #include "SimpleAnomalyDetector.h"
 
@@ -70,4 +71,3 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
     // return vector of anomaly report
     // TODO Auto-generated destructor stub
 }
-

@@ -1,4 +1,5 @@
 
+
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_
 #include "fstream"
@@ -26,3 +27,4 @@ public:
 };
 
 #endif /* TIMESERIES_H_ */
+
