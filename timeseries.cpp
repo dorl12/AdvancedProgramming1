@@ -1,9 +1,8 @@
 
 #include <sstream>
 #include "timeseries.h"
-using namespace std;
 
-TimeSeries::TimeSeries(const char* CSVfileName) {
+TimeSeries::TimeSeries(const char *CSVfileName) {
     fstream file(CSVfileName);
     initializeFeatures(file);
     initializeDataList(file);
@@ -11,40 +10,44 @@ TimeSeries::TimeSeries(const char* CSVfileName) {
 }
 
 void TimeSeries::initializeFeatures(fstream &file) {
-    string firstLine = "";
-    getline(file,firstLine);
+    string firstLine;
+    getline(file, firstLine);
     stringstream ss(firstLine);
     while (ss.good()) {
         string substr;
         getline(ss, substr, ',');
-        features.push_back(substr);
+        this->features.push_back(substr);
     }
 }
 
 void TimeSeries::initializeDataList(fstream &file) {
-    string line = "";
-    while (getline(file,line)) {
+    vector<vector<float>> dataListPer(this->features.size(), vector<float>());
+    string line;
+    while (getline(file, line)) {
         stringstream ss(line);
         for (int i = 0; i < features.size();) {
             while (ss.good()) {
                 string substr;
                 getline(ss, substr, ',');
-                dataList[i].push_back(stof(substr));
+                dataListPer[i].push_back(stof(substr));
                 i++;
             }
         }
+        this->dataList = dataListPer;
     }
 }
 
-vector<vector<float>> TimeSeries::getDataList()const{
+vector<vector<float>> TimeSeries::getDataList() const{
     return dataList;
 }
 int TimeSeries::numOfFeatures()const{
     return features.size();
 }
 float* TimeSeries::vecToArray(int index) const{
-    int size = dataList[index].size();
-    float arr[size];
+    vector<float> cur = dataList[index];
+    int size = (int)cur.size();
+    float* arr;
+    arr = new float[size];
     for(int i = 0; i < size; i++) {
         arr[i] = dataList[index][i];
     }
@@ -59,6 +62,8 @@ vector<string> TimeSeries::getFeaturesVec() const {
 Point** TimeSeries::vecToPoints(int f1, int f2) const {
     int size = dataList[f1].size();
     Point* arr[size];
+ //   Point** send = new Point*();
+//    arr = new Point*[size];
     for(int i =0; i < size; i++) {
         float  x = dataList[f1][i];
         float y = dataList[f2][i];
