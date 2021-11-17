@@ -25,16 +25,16 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
                 m = p;
                 c = j;
             }
-            if (c != -1) {
-                featureCouple.feature1 = ts.getFeature(i);
-                featureCouple.feature2 = ts.getFeature(c);
-                featureCouple.lin_reg = linear_reg(ts.vecToPoints(i, j), ts.numOfRows());
-                featureCouple.corrlation = p;
-                featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(i,(int)c),
-                                                            featureCouple.lin_reg, ts.numOfRows()) * 1.1);
-                this->cf.push_back(featureCouple);
-                //delete arr of points
-            }
+        }
+        if (c != -1) {
+            featureCouple.feature1 = ts.getFeature(i);
+            featureCouple.feature2 = ts.getFeature(c);
+            featureCouple.lin_reg = linear_reg(ts.vecToPoints(i, c), ts.numOfRows());
+            featureCouple.corrlation = p;
+            featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(i,(int)c),
+                                                        featureCouple.lin_reg, ts.numOfRows()) * 1.1);
+            this->cf.push_back(featureCouple);
+            //delete arr of points
         }
 
     }

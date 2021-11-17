@@ -63,16 +63,16 @@ Line linear_reg(Point** points, int size){
     if (size == 0){
         throw std::runtime_error("Size Not Valid");
     }
-    int arrSize = sizeof(points) / sizeof(points[0]);
+    //int arrSize = sizeof(points) / sizeof(points[0]);
     float sumX = 0, sumY = 0, sumPowX = 0, sumXY = 0, a, b;
-    for (int i = 0; i < arrSize; i++) {
+    for (int i = 0; i < size; i++) {
         sumX += points[i]->x;
         sumY += points[i]->y;
         sumPowX += (points[i]->x) * (points[i]->x);
         sumXY += (points[i]->x) * (points[i]->y);
     }
-    a = (arrSize*sumXY - sumX*sumY) / (arrSize*sumPowX - sumX*sumX);
-    b = (sumY - a*sumX) / arrSize;
+    a = (size*sumXY - sumX*sumY) / (size*sumPowX - sumX*sumX);
+    b = (sumY - a*sumX) / size;
 
 	return Line(a,b);
 }

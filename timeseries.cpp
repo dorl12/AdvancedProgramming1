@@ -61,9 +61,9 @@ vector<string> TimeSeries::getFeaturesVec() const {
 }
 Point** TimeSeries::vecToPoints(int f1, int f2) const {
     int size = dataList[f1].size();
-    Point* arr[size];
+    Point** arr;
  //   Point** send = new Point*();
-//    arr = new Point*[size];
+    arr = new Point*[size];
     for(int i =0; i < size; i++) {
         float  x = dataList[f1][i];
         float y = dataList[f2][i];
