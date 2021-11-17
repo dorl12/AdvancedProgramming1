@@ -26,7 +26,10 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
                 c = j;
             }
         }
-        if (c != -1) {
+        if (c != -1 && p > 0.9) {
+            if(p < 0.99 ){
+                continue;
+            }
             featureCouple.feature1 = ts.getFeature(i);
             featureCouple.feature2 = ts.getFeature(c);
             featureCouple.lin_reg = linear_reg(ts.vecToPoints(i, c), ts.numOfRows());
