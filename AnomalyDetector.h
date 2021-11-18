@@ -1,4 +1,9 @@
-
+/*
+ * AnomalyDetector.h
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #ifndef ANOMALYDETECTOR_H_
 #define ANOMALYDETECTOR_H_
 

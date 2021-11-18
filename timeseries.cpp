@@ -1,4 +1,9 @@
-
+/*
+ * timeseries.cpp
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #include <sstream>
 #include "timeseries.h"
 
@@ -95,6 +100,3 @@ int TimeSeries::getIndexFeature(vector<string> v, string s)const {
     }
     return -1;
 }
-
-
-//write a func that return max dev (get line, get points**, size)
