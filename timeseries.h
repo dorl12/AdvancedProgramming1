@@ -1,4 +1,9 @@
-
+/*
+ * timeseries.h
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_

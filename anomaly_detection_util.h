@@ -1,4 +1,9 @@
-
+/*
+ * anomaly_detection_util.h
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #ifndef ANOMALYDETECTORUTIL_H_
 #define ANOMALYDETECTORUTIL_H_
 
@@ -28,6 +33,7 @@ public:
 class Point{
 public:
 	float x,y;
+    Point() :x(0), y(0){}
 	Point(float x, float y):x(x),y(y){}
 };
 
