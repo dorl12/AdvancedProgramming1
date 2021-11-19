@@ -8,7 +8,7 @@
 #include <math.h>
 #include "anomaly_detection_util.h"
 
-
+// returns the average of X
 float avg(float* x, int size){
     if (size == 0){
         throw std::runtime_error("Size Not Valid");
@@ -19,10 +19,10 @@ float avg(float* x, int size){
         sum += x[i];
     }
     average = sum / (float)size;
-	return average;
+    return average;
 }
 
-// returns the variance of X and Y
+// returns the variance of the elements of X
 float var(float* x, int size){
     if (size == 0){
         throw std::runtime_error("Size Not Valid");
@@ -45,7 +45,7 @@ float cov(float* x, float* y, int size){
         cov += (x[i] - avg(x,size)) * (y[i] - avg(y,size));
     }
 
-	return cov / size;
+    return cov / size;
 }
 
 
@@ -54,7 +54,7 @@ float pearson(float* x, float* y, int size){
     if (size == 0){
         throw std::runtime_error("Size Not Valid");
     }
-	float corr = cov(x, y, size) / ((sqrt(var(x, size))) * (sqrt(var(y, size))));
+    float corr = cov(x, y, size) / ((sqrt(var(x, size))) * (sqrt(var(y, size))));
     return corr;
 }
 
@@ -63,18 +63,18 @@ Line linear_reg(Point** points, int size){
     if (size == 0){
         throw std::runtime_error("Size Not Valid");
     }
-    int arrSize = sizeof(points) / sizeof(points[0]);
+    //int arrSize = sizeof(points) / sizeof(points[0]);
     float sumX = 0, sumY = 0, sumPowX = 0, sumXY = 0, a, b;
-    for (int i = 0; i < arrSize; i++) {
+    for (int i = 0; i < size; i++) {
         sumX += points[i]->x;
         sumY += points[i]->y;
         sumPowX += (points[i]->x) * (points[i]->x);
         sumXY += (points[i]->x) * (points[i]->y);
     }
-    a = (arrSize*sumXY - sumX*sumY) / (arrSize*sumPowX - sumX*sumX);
-    b = (sumY - a*sumX) / arrSize;
+    a = (size*sumXY - sumX*sumY) / (size*sumPowX - sumX*sumX);
+    b = (sumY - a*sumX) / size;
 
-	return Line(a,b);
+    return Line(a,b);
 }
 
 // returns the deviation between point p and the line equation of the points
