@@ -84,6 +84,6 @@ Circle minCircleWelzlAlgo(Point** inputPoints, vector<Point> pointsOnBoundary, i
 }
 
 Circle findMinCircle(Point** points,size_t size) {
-    
+    return minCircleWelzlAlgo(points, {}, size);
 }
 
