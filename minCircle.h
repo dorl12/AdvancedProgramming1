@@ -29,11 +29,11 @@ public:
 // returns the minimum circle enclosing the given points
 Circle findMinCircle(Point** points,size_t size);
 // returns the euclidean distance between two points
-double eucDist(const Point& firstPoint, const Point& secondPoint);
+float eucDist(const Point& firstPoint, const Point& secondPoint);
 // checks whether the given point lies inside the circle or on the boundaries
 bool isInsideTheCircle(const Circle& circle, const Point& point);
 // returns a point which is the center of a circle defined by three points
-Point calculateCenter(double x1, double y1, double x2, double y2);
+Point calculateCenter(float x1, float y1, float x2, float y2);
 // returns the smallest circle defined by three points
 Circle circleFromThreePoints(const Point& firstPoint, const Point& secondPoint, const Point& thirdPoint);
 // returns the smallest circle defined by two points
