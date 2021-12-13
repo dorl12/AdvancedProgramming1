@@ -8,7 +8,7 @@
 #include "minCircle.h"
 
 // returns the euclidean distance between two points
-double eucDist(const Point& firstPoint, const Point& secondPoint) {
+float eucDist(const Point& firstPoint, const Point& secondPoint) {
     return sqrt(pow(firstPoint.x - secondPoint.x, 2) + pow(firstPoint.y - secondPoint.y, 2));
 }
 
@@ -18,10 +18,10 @@ bool isInsideTheCircle(const Circle& circle, const Point& point) {
 }
 
 // returns a point which is the center of a circle defined by three points
-Point calculateCenter(double x1, double y1, double x2, double y2) {
-    double a = x1 * x1 + y1 * y1;
-    double b = x2 * x2 + y2 * y2;
-    double c = x1 * y2 - y1 * x2;
+Point calculateCenter(float x1, float y1, float x2, float y2) {
+    float a = x1 * x1 + y1 * y1;
+    float b = x2 * x2 + y2 * y2;
+    float c = x1 * y2 - y1 * x2;
     return Point((y2 * a - y1 * b) / (2 * c), (x1 * b - x2 * a) / (2 * c));
 }
 
