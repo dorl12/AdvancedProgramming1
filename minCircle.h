@@ -24,9 +24,9 @@ public:
 Circle findMinCircle(Point** points,size_t size);
 
 // you can add here additional methods
-double eucDist(const Point& firstPoint, const Point& secondPoint);
+float eucDist(const Point& firstPoint, const Point& secondPoint);
 bool isInsideTheCircle(const Circle& circle, const Point& point);
-Point calculateCenter(double x1, double y1, double x2, double y2);
+Point calculateCenter(float x1, float y1, float x2, float y2);
 Circle circleFromThreePoints(const Point& firstPoint, const Point& secondPoint, const Point& thirdPoint);
 Circle circleFromTwoPoints(const Point& firstPoint, const Point& secondPoint);
 bool isValidCircle(const Circle& circle, const vector<Point>& vectorOfPoints);
