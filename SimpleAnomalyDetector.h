@@ -20,11 +20,15 @@ struct correlatedFeatures{
     float corrlation;
     Line lin_reg;
     float threshold;
+    float cx;
+    float cy;
 };
 
 // a class to define a detector of simple anomaly
 class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector{
+protected:
     vector<correlatedFeatures> cf;
+    float threshold;
 public:
     // the constructor of the class SimpleAnomalyDetector
     SimpleAnomalyDetector();
@@ -42,6 +46,10 @@ public:
     vector<correlatedFeatures> getNormalModel(){
         return cf;
     }
+
+protected:
+    virtual void learnDetectCombined(const TimeSeries &ts, float m, int featureIndex1, int featureIndex2);
+    virtual bool isAnomalous(float x, float y, correlatedFeatures featureCouple);
 };
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */

@@ -9,7 +9,7 @@
 
 // the constructor of the class SimpleAnomalyDetector
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
-    // TODO Auto-generated constructor stub
+    threshold = 0.9;
 }
 
 // the destructor of the class SimpleAnomalyDetector
@@ -22,7 +22,6 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
    To him according to pearson function
  */
 void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
-    correlatedFeatures featureCouple;
     float m , c, p;
     for(int i = 0; i < ts.numOfFeatures(); i++) {
         // a threshold that features above it will be considered correlative
@@ -44,15 +43,22 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
             Pearson at the absolute highest value
          */
         if (c != -1) {
-            featureCouple.feature1 = ts.getFeature(i);
-            featureCouple.feature2 = ts.getFeature(c);
-            featureCouple.lin_reg = linear_reg(ts.vecToPoints(i, c), ts.numOfRows());
-            featureCouple.corrlation = m;
-            featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(i,c),
-                                                        featureCouple.lin_reg, ts.numOfRows()) * 1.1);
-            this->cf.push_back(featureCouple);
+            learnDetectCombined(ts, m, i, c);
         }
         // optional implement - delete vecToArray and vecToPoints
+    }
+}
+
+void SimpleAnomalyDetector::learnDetectCombined(const TimeSeries& ts, float m, int featureIndex1, int featureIndex2) {
+    if (m > threshold) {
+        correlatedFeatures featureCouple;
+        featureCouple.feature1 = ts.getFeature(featureIndex1);
+        featureCouple.feature2 = ts.getFeature(featureIndex2);
+        featureCouple.lin_reg = linear_reg(ts.vecToPoints
+                (featureIndex1, featureIndex2), ts.numOfRows());
+        featureCouple.corrlation = m;
+        featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(featureIndex1,featureIndex2),
+                                                    featureCouple.lin_reg, ts.numOfRows()) * 1.1);
     }
 }
 
@@ -66,7 +72,6 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
     for (iter = cf.begin(); iter < cf.end(); iter++) {
         index_f1 = ts.getIndexFeature(ts.getFeaturesVec(), iter->feature1);
         index_f2 = ts.getIndexFeature(ts.getFeaturesVec(), iter->feature2);
-        threshold = iter->threshold;
         for (int i = 0; i < ts.numOfRows(); i ++) {
             x = ts.getDataList()[index_f1][i];
             y = ts.getDataList()[index_f2][i];
@@ -75,7 +80,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
                 in case the distance is greater than the maximal distance we found for these features
                 in the learning phase, we will include in the report the features involved
              */
-            if (indicator > threshold) {
+            if (isAnomalous(x, y, *iter)) {
                 // concatenating string. exapmle : "A-C"
                 string s = iter->feature1;
                 s.append("-");
@@ -88,4 +93,10 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
     }
     // return the vector of anomaly reports
     return vAP;
+}
+
+bool SimpleAnomalyDetector::isAnomalous(float x, float y, correlatedFeatures featureCouple) {
+    float indicator = dev(Point(x,y), featureCouple.lin_reg);
+    float threshold = featureCouple.threshold;
+    return (indicator > threshold);
 }
