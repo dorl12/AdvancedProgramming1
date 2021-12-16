@@ -42,10 +42,11 @@ float cov(float* x, float* y, int size){
     }
     float cov = 0;
     for (int i = 0; i < size; i++){
-        cov += (x[i] - avg(x,size)) * (y[i] - avg(y,size));
+        cov += x[i]*y[i];
     }
+    cov = cov / size;
 
-    return cov / size;
+    return cov - avg(x,size)*avg(y,size);
 }
 
 

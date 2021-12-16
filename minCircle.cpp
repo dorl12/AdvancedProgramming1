@@ -7,6 +7,10 @@
 #include <math.h>
 #include "minCircle.h"
 
+
+float Dist(const Point& firstPoint, const Point& secondPoint) {
+    return sqrt(pow(firstPoint.x - secondPoint.x, 2) + pow(firstPoint.y - secondPoint.y, 2));
+}
 // returns the euclidean distance between two points
 float eucDist(const Point& firstPoint, const Point& secondPoint) {
     return sqrt(pow(firstPoint.x - secondPoint.x, 2) + pow(firstPoint.y - secondPoint.y, 2));

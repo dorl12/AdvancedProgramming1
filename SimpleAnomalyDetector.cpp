@@ -22,17 +22,18 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
    To him according to pearson function
  */
 void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
-    float m , c, p;
+    float m , p;
+    int c;
     for(int i = 0; i < ts.numOfFeatures(); i++) {
         // a threshold that features above it will be considered correlative
-        m = 0.9;
+        m = 0;
         c = -1;
         /*
             for each feature we will measure using Pearson the correlation between the value vector of
             𝑓𝑖 and the vector of values of each 𝑓𝑗≠𝑖
          */
         for (int j = i+1; j < ts.numOfFeatures(); j++) {
-            p = abs(pearson(ts.vecToArray(i),ts.vecToArray(j) , ts.getDataList().size()));
+            p = abs(pearson(ts.vecToArray(i),ts.vecToArray(j) , ts.numOfRows()));
             if(p > m) {
                 m = p;
                 c = j;
@@ -59,6 +60,7 @@ void SimpleAnomalyDetector::learnDetectCombined(const TimeSeries& ts, float m, i
         featureCouple.corrlation = m;
         featureCouple.threshold = (float)(ts.maxDev(ts.vecToPoints(featureIndex1,featureIndex2),
                                                     featureCouple.lin_reg, ts.numOfRows()) * 1.1);
+        cf.push_back(featureCouple);
     }
 }
 

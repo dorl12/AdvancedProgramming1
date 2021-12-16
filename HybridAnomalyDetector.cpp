@@ -1,5 +1,6 @@
 
 #include "HybridAnomalyDetector.h"
+#include "minCircle.h"
 
 HybridAnomalyDetector::HybridAnomalyDetector() {
     // TODO Auto-generated constructor stub
@@ -29,6 +30,7 @@ void HybridAnomalyDetector::learnDetectCombined(const TimeSeries &ts, float m, i
 
 bool HybridAnomalyDetector::isAnomalous(float x, float y, correlatedFeatures featureCouple) {
     return (featureCouple.corrlation >= threshold && SimpleAnomalyDetector::isAnomalous(x, y, featureCouple)) ||
-            (featureCouple.corrlation > 0.5 && featureCouple.corrlation < threshold && eucDist(Point(featureCouple.cx
-            ,featureCouple.cy), Point(x, y)) > featureCouple.threshold);
+            (featureCouple.corrlation > 0.5 && featureCouple.corrlation < threshold &&
+            Dist(Point(featureCouple.cx,featureCouple.cy), Point(x, y)) > featureCouple.threshold);
+
 }

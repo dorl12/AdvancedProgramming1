@@ -94,9 +94,16 @@ void checkCorrelation(correlatedFeatures c,string f1, string f2, float a, float 
 
 int main(){
     srand (time(NULL));
-    float a1=1+rand()%10, b1=-50+rand()%100;
-    float a2=1+rand()%20 , b2=-50+rand()%100;
-    float a3=1+rand()%40 , b3=-50+rand()%100;
+//    float a1=1+rand()%10, b1=-50+rand()%100;
+//    float a2=1+rand()%20 , b2=-50+rand()%100;
+//    float a3=1+rand()%40 , b3=-50+rand()%100;
+    float a1=4, b1=-26;
+    float a2=12 , b2=-48;
+    float a3=14 , b3=0;
+    // a1: 4 b1: -26
+    // a2: 12 b2: -48
+    // a3: 14 b3: 0
+    // cancel generate and write down a1 to b3
 
 
     // test the learned model: (40 points)
@@ -105,7 +112,7 @@ int main(){
     //	C-D: y=a2*x+b2
     //	E-F: y=a3*x+b3
 
-    generateTrainCSV(a1,b1,a2,b2,a3,b3);
+    //generateTrainCSV(a1,b1,a2,b2,a3,b3);
     TimeSeries ts("trainFile.csv");
     HybridAnomalyDetector ad;
     ad.learnNormal(ts);
@@ -122,15 +129,19 @@ int main(){
 
     // test the anomaly detector: (60 points)
     // one simply anomaly is injected to the data
-    int anomaly1=5+rand()%90; // anomaly injected in a random time step
-    int anomaly2=5+rand()%90; // anomaly injected in a random time step
-    int anomaly3=5+rand()%90; // anomaly injected in a random time step
+//    int anomaly1=5+rand()%90; // anomaly injected in a random time step
+//    int anomaly2=5+rand()%90; // anomaly injected in a random time step
+//    int anomaly3=5+rand()%90; // anomaly injected in a random time step
+    // 61, 34, 38
+    int anomaly1 = 61;
+    int anomaly2 = 34;
+    int anomaly3 = 38;
 
     anomalies.push_back(AnomalyReport("A-B",anomaly1));
     anomalies.push_back(AnomalyReport("C-D",anomaly2));
     anomalies.push_back(AnomalyReport("E-F",anomaly3));
 
-    generateTestCSV(a1,b1,a2,b2,a3,b3);
+    //generateTestCSV(a1,b1,a2,b2,a3,b3);
     TimeSeries ts2("testFile.csv");
     vector<AnomalyReport> r = ad.detect(ts2);
     bool detected[]={false,false,false};
