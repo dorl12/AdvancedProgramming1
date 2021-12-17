@@ -12,7 +12,9 @@ HybridAnomalyDetector::~HybridAnomalyDetector() {
 }
 
 void HybridAnomalyDetector::learnDetectCombined(const TimeSeries &ts, float m, int featureIndex1, int featureIndex2) {
+    // detect for simple detector
     SimpleAnomalyDetector::learnDetectCombined(ts, m, featureIndex1, featureIndex2);
+    // generate minimum enclosing circle
     if (m > 0.5 && m < threshold) {
         Circle circle = findMinCircle(ts.vecToPoints(featureIndex1, featureIndex2), ts.numOfRows());
         correlatedFeatures featureCouple;
@@ -29,8 +31,16 @@ void HybridAnomalyDetector::learnDetectCombined(const TimeSeries &ts, float m, i
 }
 
 bool HybridAnomalyDetector::isAnomalous(float x, float y, correlatedFeatures featureCouple) {
-    return (featureCouple.corrlation >= threshold && SimpleAnomalyDetector::isAnomalous(x, y, featureCouple)) ||
-            (featureCouple.corrlation > 0.5 && featureCouple.corrlation < threshold &&
-            Dist(Point(featureCouple.cx,featureCouple.cy), Point(x, y)) > featureCouple.threshold);
-
+    // run the simple detector
+    if (SimpleAnomalyDetector::isAnomalous(x, y, featureCouple)) {
+        return true;
+    }
+    // generate minimum enclosing circle
+    else if((featureCouple.corrlation > 0.5 && featureCouple.corrlation < threshold &&
+             eucDist(Point(featureCouple.cx,featureCouple.cy), Point(x, y)) > featureCouple.threshold)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
