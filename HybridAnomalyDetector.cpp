@@ -44,3 +44,4 @@ bool HybridAnomalyDetector::isAnomalous(float x, float y, correlatedFeatures fea
         return false;
     }
 }
+
