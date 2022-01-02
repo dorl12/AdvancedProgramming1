@@ -46,10 +46,13 @@ public:
     vector<correlatedFeatures> getNormalModel(){
         return cf;
     }
+    void changeThreshold(float f);
 
 protected:
     virtual void learnDetectCombined(const TimeSeries &ts, float m, int featureIndex1, int featureIndex2);
     virtual bool isAnomalous(float x, float y, correlatedFeatures featureCouple);
+
+
 };
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */

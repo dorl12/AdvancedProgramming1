@@ -9,7 +9,6 @@ using namespace std;
 class CLI {
     DefaultIO* dio;
     vector<Command*> commands;
-    Data* data;
 public:
     CLI(DefaultIO* dio);
     void start();

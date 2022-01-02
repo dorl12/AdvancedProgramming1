@@ -1,14 +1,16 @@
+// Hadar Pinto 316460146
+// Dor Levy 313547085
 #include "CLI.h"
 
 CLI::CLI(DefaultIO* dio) {
     this->dio = dio;
-    this->data = new Data();
-    commands.push_back(new UploadCSVFile(dio));
-    commands.push_back(new AlgorithmSetting(dio));
-    commands.push_back(new DetectAnomalies(dio));
-    commands.push_back(new DisplayResults(dio));
-    commands.push_back(new UploadAnomalies(dio));
-    commands.push_back(new Exit(dio));
+    Data* data = new Data();
+    commands.push_back(new UploadCSVFile(dio, data));
+    commands.push_back(new AlgorithmSetting(dio, data));
+    commands.push_back(new DetectAnomalies(dio, data));
+    commands.push_back(new DisplayResults(dio, data));
+    commands.push_back(new UploadAnomalies(dio, data));
+    commands.push_back(new Exit(dio, data));
 }
 
 void CLI::start(){
