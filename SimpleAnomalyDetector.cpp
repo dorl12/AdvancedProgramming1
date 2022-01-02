@@ -17,6 +17,9 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
     // TODO Auto-generated destructor stub
 }
 
+void SimpleAnomalyDetector::changeThreshold(float f){
+    this->threshold = f;
+}
 /*
    examines for each feature which of the other features is the most correlative
    To him according to pearson function

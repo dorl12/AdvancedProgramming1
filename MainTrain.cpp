@@ -28,10 +28,12 @@ public:
     }
     virtual void write(string text){
         out<<text;
+        //cout<<text;
     }
 
     virtual void write(float f){
         out<<f;
+        //cout<<f;
     }
 
     virtual void read(float* f){

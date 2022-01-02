@@ -23,7 +23,7 @@ public:
     void readAndCreateFile(string fileName) {
         ofstream newFile(fileName);
         string line = "";
-        while ((line=read()) != "done\n"){
+        while ((line=read()) != "done"){
             newFile<<line<<endl;
         }
         newFile.close();
@@ -44,6 +44,7 @@ public:
     int numOfRows;
     vector<AnomalyReport> ap;
     vector<newReport> report;
+    HybridAnomalyDetector ad;
 
 public:
     Data(){
@@ -56,9 +57,6 @@ public:
     void setNumOfRows(int i){
         this->numOfRows = i;
     }
-    void setAP(const vector<AnomalyReport> &a ){
-        //this->ap = a;
-    }
 };
 
 // you may edit this class
@@ -68,7 +66,8 @@ protected:
     Data* data;
 public:
     const string description;
-    Command(DefaultIO* dio, const string description):dio(dio), description(description){
+    Command(DefaultIO* dio, const string description, Data* data):dio(dio), description(description){
+        this->data = data;
     }
     virtual void execute()=0;
     virtual ~Command(){}
@@ -76,7 +75,7 @@ public:
 
 class UploadCSVFile:public Command{
 public:
-    UploadCSVFile(DefaultIO* dio):Command(dio,"upload a time series csv file"){}
+    UploadCSVFile(DefaultIO* dio, Data* data):Command(dio,"upload a time series csv file", data){}
     virtual void execute(){
         dio->write("Please upload your local train CSV file.\n");
         dio->readAndCreateFile("anomalyTrain.csv");
@@ -89,7 +88,7 @@ public:
 
 class AlgorithmSetting:public Command{
 public:
-    AlgorithmSetting(DefaultIO* dio):Command(dio, "algorithm settings"){}
+    AlgorithmSetting(DefaultIO* dio, Data* data):Command(dio, "algorithm settings", data){}
     virtual void execute(){
         bool exitLoop = false;
         float userThreshold;
@@ -100,6 +99,7 @@ public:
             dio->read(&userThreshold);
             if (userThreshold > 0 && userThreshold <= 1) {
                 data->setThreshold(userThreshold);
+                data->ad.changeThreshold(userThreshold);
                 exitLoop = true;
             }
             else {
@@ -111,28 +111,32 @@ public:
 
 class DetectAnomalies:public Command{
 public:
-    DetectAnomalies(DefaultIO* dio): Command(dio, "detect anomalies"){}
+    DetectAnomalies(DefaultIO* dio, Data* data): Command(dio, "detect anomalies", data){}
     virtual void execute(){
         TimeSeries trainData("anomalyTrain.csv");
         TimeSeries testData("anomalyTest.csv");
         data->setNumOfRows(testData.numOfRows());
         HybridAnomalyDetector had;
         // changing threshold********************************************************
+
         had.learnNormal(trainData);
-        data->setAP(had.detect(testData)); // need to check this *****************************8
+        //data->setAP(had.detect(testData)); // need to check this *****************************8
+        //data->ap = data->ad.detect(testData);
+        data->ap = had.detect(testData);
         newReport nr;
         nr.startLine = 0;
         nr.endLine = 0;
         nr.features = "";
-        vector<AnomalyReport>::iterator iter;
-        for(iter = data->ap.begin(); iter <= data->ap.end(); iter++) {
-            if (iter->timeStep == nr.endLine + 1 && iter->description == nr.features) {
+//        vector<AnomalyReport>::iterator iter;
+//        for(iter = data->ap.begin(); iter <= data->ap.end(); iter++)
+          for(AnomalyReport iter: data->ap){
+            if ((iter.timeStep == nr.endLine + 1) && (iter.description == nr.features)) {
                 nr.endLine++;
             } else {
                 data->report.push_back(nr);
-                nr.startLine = iter->timeStep;
+                nr.startLine = iter.timeStep;
                 nr.endLine = nr.startLine;
-                nr.features = iter->description;
+                nr.features = iter.description;
             }
         }
         data->report.push_back(nr);
@@ -144,19 +148,20 @@ public:
 
 class DisplayResults:public Command{
 public:
-    DisplayResults(DefaultIO* dio): Command(dio, "display results"){}
+    DisplayResults(DefaultIO* dio, Data* data): Command(dio, "display results",data){}
     virtual void execute(){
         vector<AnomalyReport>::iterator iter;
-        for (iter = data->ap.begin(); iter <= data->ap.end(); iter++) {
-            dio->write(iter->timeStep);
-            dio->write("\t" + iter->description + "\n");
+//        for (iter = data->ap.begin(); iter <= data->ap.end(); iter++)
+         for(AnomalyReport iter: data->ap){
+            dio->write(iter.timeStep);
+            dio->write("\t" + iter.description + "\n");
         }
         dio->write("Done.\n");
     }
 };
 class UploadAnomalies:public Command{
 public:
-    UploadAnomalies(DefaultIO* dio): Command(dio,"upload anomalies and analyze results"){}
+    UploadAnomalies(DefaultIO* dio, Data* data): Command(dio,"upload anomalies and analyze results", data){}
     bool isTruePostive(int start, int end){
         for(int i = 0; i < data->report.size(); i++) {
             newReport nr = data->report[i];
@@ -171,38 +176,38 @@ public:
     virtual void execute(){
         dio->write("please upload your local anomalies files.\n");
         string line = "";
-        int countTruePositive = 0 , numOfReports = 0, totalTimeSteps = 0, countFalsePositive;
-        while ((line=dio->read()) != "done\n"){
+        float countTruePositive = 0 , numOfReports = 0, totalTimeSteps = 0, countFalsePositive;
+        while ((line=dio->read()) != "done"){
             numOfReports++;
             int lineLength = line.length();
-            for(int i = 0;line[i] != ','; i++) {
-                string start = line.substr(0,i);
-                string end = line.substr(i+1, lineLength);
-                int startToInt = stoi(start);
-                int endToInt = stoi(end);
-                if(isTruePostive(startToInt,endToInt)){
-                    countTruePositive++;
-                }
-                totalTimeSteps += endToInt - startToInt + 1;
+
+            string start = line.substr(0,line.find(','));
+            string end = line.substr(line.find(',') + 1, lineLength);
+            int startToInt = stoi(start);
+            int endToInt = stoi(end);
+            if(isTruePostive(startToInt,endToInt)){
+                countTruePositive++;
             }
+            totalTimeSteps += endToInt - startToInt + 1;
+
         }
         dio->write("Upload complete.\n");
         countFalsePositive = (data->report.size()) - countTruePositive;
-        int N;
+        float N;
         float truePositiveRate, falsePositiveRate;
         N = data->numOfRows - totalTimeSteps;
-        truePositiveRate = (float)((1000 * countTruePositive) / (1000*numOfReports)) / 1000.0f;
-        falsePositiveRate = (float)((1000*countFalsePositive) / (1000*N)) / 1000.0f;
-        dio->write("True positive rate: ");
+        truePositiveRate = ((int)(1000.0*countTruePositive/numOfReports))/1000.0f;
+        falsePositiveRate = ((int)(1000.0*countFalsePositive/N))/1000.0f;
+        dio->write("True Positive Rate: ");
         dio->write(truePositiveRate);
-        dio->write("\nFalse positive rate: ");
+        dio->write("\nFalse Positive Rate: ");
         dio->write(falsePositiveRate);
         dio->write("\n");
     }
 };
 class Exit:public Command{
 public:
-    Exit(DefaultIO* dio): Command(dio,"exit"){}
+    Exit(DefaultIO* dio, Data* data): Command(dio,"exit",data){}
     virtual void execute(){
     }
 };
