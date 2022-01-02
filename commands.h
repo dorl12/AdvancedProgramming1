@@ -1,4 +1,5 @@
-
+// Hadar Pinto 316460146
+// Dor Levy 313547085
 
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
@@ -28,10 +29,10 @@ public:
         }
         newFile.close();
     }
-    // you may add additional methods here
+
 };
 
-// you may add here helper classes
+
 struct newReport {
     int startLine;
     int endLine;
@@ -59,7 +60,6 @@ public:
     }
 };
 
-// you may edit this class
 class Command{
 protected:
     DefaultIO* dio;
@@ -117,18 +117,12 @@ public:
         TimeSeries testData("anomalyTest.csv");
         data->setNumOfRows(testData.numOfRows());
         HybridAnomalyDetector had;
-        // changing threshold********************************************************
-
         had.learnNormal(trainData);
-        //data->setAP(had.detect(testData)); // need to check this *****************************8
-        //data->ap = data->ad.detect(testData);
         data->ap = had.detect(testData);
         newReport nr;
         nr.startLine = 0;
         nr.endLine = 0;
         nr.features = "";
-//        vector<AnomalyReport>::iterator iter;
-//        for(iter = data->ap.begin(); iter <= data->ap.end(); iter++)
           for(AnomalyReport iter: data->ap){
             if ((iter.timeStep == nr.endLine + 1) && (iter.description == nr.features)) {
                 nr.endLine++;
@@ -211,6 +205,6 @@ public:
     virtual void execute(){
     }
 };
-// implement here your command classes
+
 
 #endif /* COMMANDS_H_ */
