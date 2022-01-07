@@ -1,3 +1,9 @@
+/*
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
+
 #include "sys/socket.h"
 #include "Server.h"
 #include "signal.h"
@@ -6,7 +12,6 @@
 #include "CLI.h"
 
 #include <netinet/in.h>
-#include <iostream>
 #include <functional>
 string SocketIO::read() {
     char ch = 0;

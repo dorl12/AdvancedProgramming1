@@ -1,6 +1,8 @@
-// Hadar Pinto 316460146
-// Dor Levy 313547085
-
+/*
+ *
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
