@@ -1,6 +1,7 @@
-// Hadar Pinto 316460146
-// Dor Levy 313547085
-
+/*
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
@@ -24,7 +25,7 @@ public:
     void readAndCreateFile(string fileName) {
         ofstream newFile(fileName);
         string line = "";
-        while ((line=read()) != "done"){
+        while ((line=read()) != "done\n"){
             newFile<<line<<endl;
         }
         newFile.close();
@@ -171,7 +172,7 @@ public:
         dio->write("please upload your local anomalies files.\n");
         string line = "";
         float countTruePositive = 0 , numOfReports = 0, totalTimeSteps = 0, countFalsePositive;
-        while ((line=dio->read()) != "done"){
+        while ((line=dio->read()) != "done\n"){
             numOfReports++;
             int lineLength = line.length();
 

@@ -1,5 +1,7 @@
-// Hadar Pinto 316460146
-// Dor Levy 313547085
+/*
+ * Author: 316460146 Hadar Pinto
+ *         313547085 Dor Levy
+ */
 #include "CLI.h"
 
 CLI::CLI(DefaultIO* dio) {
