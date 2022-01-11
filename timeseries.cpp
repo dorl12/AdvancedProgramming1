@@ -36,6 +36,9 @@ void TimeSeries::initializeDataList(fstream &file) {
     // parse each line and push each value to the right vector according to the order
     while (getline(file, line)) {
         stringstream ss(line);
+        if (line == "") {
+            continue;
+        }
         for (int i = 0; i < features.size();) {
             while (ss.good()) {
                 string substr;

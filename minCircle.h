@@ -26,6 +26,7 @@ public:
 };
 // --------------------------------------
 
+float Dist(const Point& firstPoint, const Point& secondPoint);
 // returns the minimum circle enclosing the given points
 Circle findMinCircle(Point** points,size_t size);
 // returns the euclidean distance between two points
@@ -54,4 +55,3 @@ Circle minCircleWelzlAlgo(Point** inputPoints, vector<Point> pointsOnBoundary, i
 
 
 #endif /* MINCIRCLE_H_ */
-
